@@ -235,7 +235,28 @@ in {
       };
       default = {};
       description = "";
-    };    
+    };
+    "Desktops" = with types; mkOption {
+      type = submodule {
+        options = {
+          Ids = mkOption {
+            type = nullOr (either str (listOf string));
+            default = "";
+            description = ''
+
+              Type: StringList
+            '';
+          };
+          Rows = mkOption {
+            type = nullOr (either str int);
+            default = 1;
+            description = ''
+              Type: UInt
+            '';
+          };
+        };
+      };
+    };
     "$(EffectGroup)" = with types; mkOption {
       type = submodule {
         options = { 
@@ -1309,6 +1330,14 @@ in {
     };    
   };
   config = mkIf cfg.enable {
-    programs.plasma.files."kwinrc" = cfg.kwin;
+    programs.plasma.files."kwinrc" = let 
+      ids = lib.lists.imap1 (i: val: { name = "Id_${toString i}"; value = val; }) cfg.kwin.Desktops.Ids;
+      filteredDesktops = builtins.removeAttrs cfg.kwin.Desktops ["Ids"];
+      result = builtins.removeAttrs cfg.kwin [ "Desktops" ];
+      newResult = result // {
+        Desktops = filteredDesktops // builtins.listToAttrs ids // { Number = toString (builtins.length ids); };
+      };
+    in
+    newResult;
   };
 }

@@ -17,11 +17,11 @@ let
     else if isFloat v then
       toString v
     else if isList v then
-      concatStringsSep "," (toString v)
-    else if isEnum v then
-      toString v
+      concatStringsSep "," (map toString v)
+    #else if isEnum v then
+    #  toString v
     else
-      abort ("Unknown value type: " ++ xtoString v);
+      abort ("Unknown value type: " ++ toString v);
 
   ##############################################################################
   # Generate a series of shell commands that will update a
