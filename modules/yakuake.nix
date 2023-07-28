@@ -218,6 +218,30 @@ in {
       default = {};
       description = "Behavior";
     };    
+    "Shortcuts" = with types; mkOption {
+      type = submodule {
+        options = { 
+          "new-session-quad" = mkOption {
+            type = nullOr str;
+            default = null;
+            description = ''
+              Opens 4 sessions
+
+              Type: String
+            '';
+          };
+          "new-session-two-vertical" = mkOption {
+            type = nullOr str;
+            default = null;
+            description = ''
+              Opens 2 sessions vertically
+
+              Type: String
+            '';
+          };
+        };
+      };
+    };
     "Dialogs" = with types; mkOption {
       type = submodule {
         options = { 
