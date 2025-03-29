@@ -3,7 +3,7 @@ with lib;
 let cfg = config.programs.plasma;
 in {
   options.programs.plasma.kwin = { 
-    "" = with types; mkOption {
+    "<default>" = with types; mkOption {
       type = submodule {
         options = { 
           ApplyTo = mkOption {
