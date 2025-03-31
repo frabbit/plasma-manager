@@ -46,26 +46,26 @@ let
   # Type: string -> [string] -> AttrSet -> string
   kWriteConfig = file: group: attrs:
     lib.concatStringsSep "\n" (lib.mapAttrsToList (key: value: 
-    let 
-      debugCommand = ''
-        #set -x
-        echo "$(cat <<'EOF'
-        ###### Setting key=${lib.escapeShellArg key}=${toKdeValue value} in group=${lib.escapeShellArg group} for file=${lib.escapeShellArg file}
-        EOF
-        )"
-        '';
-      debugAll = false;
-      ifDebugAll = x: if debugAll then x else "";
-    in
-    ''
-      ${ifDebugAll debugCommand}
-      ${pkgs.libsForQt5.kconfig}/bin/kwriteconfig5 \
-        --file ''${XDG_CONFIG_HOME:-$HOME/.config}/${lib.escapeShellArg file} \
-        --group ${lib.escapeShellArg group} \
-        --key ${lib.escapeShellArg key} \
-        ${toKdeValue value}
-      if [ $? -ne 0 ]; then
-        ${debugCommand}
-      fi
-    '') attrs);
+      let 
+        debugCommand = ''
+          #set -x
+          echo "$(cat <<'EOF'
+          ###### Setting key=${lib.escapeShellArg key}=${toKdeValue value} in group=${lib.escapeShellArg group} for file=${lib.escapeShellArg file}
+          EOF
+          )"
+          '';
+        debugAll = false;
+        ifDebugAll = x: if debugAll then x else "";
+      in
+      ''
+        ${ifDebugAll debugCommand}
+        ${pkgs.libsForQt5.kconfig}/bin/kwriteconfig5 \
+          --file ''${XDG_CONFIG_HOME:-$HOME/.config}/${lib.escapeShellArg file} \
+          --group ${lib.escapeShellArg group} \
+          --key ${lib.escapeShellArg key} \
+          ${toKdeValue value}
+        if [ $? -ne 0 ]; then
+          ${debugCommand}
+        fi
+      '') attrs);
 in { inherit kWriteConfig; }
